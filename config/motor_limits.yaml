@@ -1,0 +1,30 @@
+# Motor position and velocity limits
+
+joint_limits:
+  motor_1:
+    has_position_limits: true
+    min_position: 0.0
+    max_position: 4095.0
+    has_velocity_limits: true
+    max_velocity: 3.14
+    
+  motor_2:
+    has_position_limits: true
+    min_position: 0.0
+    max_position: 4095.0
+    has_velocity_limits: true
+    max_velocity: 3.14
+    
+  motor_3:
+    has_position_limits: true
+    min_position: 0.0
+    max_position: 4095.0
+    has_velocity_limits: true
+    max_velocity: 3.14
+    
+  motor_4:
+    has_position_limits: true
+    min_position: 0.0
+    max_position: 4095.0
+    has_velocity_limits: true
+    max_velocity: 3.14

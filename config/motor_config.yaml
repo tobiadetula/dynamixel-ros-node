@@ -1,0 +1,28 @@
+# Dynamixel Motor Configuration
+
+# Serial port settings
+device_name: "/dev/ttyUSB0"
+baudrate: 57600
+protocol_version: 2.0
+
+# Motor IDs to control
+motor_ids: [1]
+
+# Update rate (Hz)
+update_rate: 50
+
+# Motor-specific settings
+motors:
+  motor_1:
+    id: 1
+    model: "XM430-W350"
+    min_position: 0
+    max_position: 4095
+    max_velocity: 200
+    
+  motor_2:
+    id: 2
+    model: "XM430-W350"
+    min_position: 0
+    max_position: 4095
+    max_velocity: 200

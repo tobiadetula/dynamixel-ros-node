@@ -1,0 +1,3 @@
+# Python dependencies for dynamixel_ros_node
+dynamixel-sdk>=3.7.0
+pyyaml>=5.1

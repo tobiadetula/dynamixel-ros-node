@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Dynamixel Controller Launch File -->
+  
+  <!-- Parameters -->
+  <arg name="device_name" default="/dev/ttyUSB0" />
+  <arg name="baudrate" default="57600" />
+  <arg name="protocol_version" default="2.0" />
+  <arg name="motor_ids" default="[1]" />
+  <arg name="update_rate" default="50" />
+  
+  <!-- Start the Dynamixel controller node -->
+  <node name="dynamixel_controller" pkg="dynamixel_ros_node" type="dynamixel_controller.py" output="screen">
+    <param name="device_name" value="$(arg device_name)" />
+    <param name="baudrate" value="$(arg baudrate)" />
+    <param name="protocol_version" value="$(arg protocol_version)" />
+    <rosparam param="motor_ids" subst_value="True">$(arg motor_ids)</rosparam>
+    <param name="update_rate" value="$(arg update_rate)" />
+  </node>
+  
+</launch>
