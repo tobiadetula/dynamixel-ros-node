@@ -21,8 +21,9 @@ find_package(rclpy REQUIRED)
 include_directories(include)
 
 # Build
-add_executable(read_write_node src/read_write_node.cpp)
-target_link_libraries(read_write_node PUBLIC
+# Build C++ version with different name
+add_executable(read_write_node_cpp src/read_write_node.cpp)
+target_link_libraries(read_write_node_cpp PUBLIC
   dynamixel_sdk::dynamixel_sdk
   ${dynamixel_sdk_custom_interfaces_TARGETS}
   rclcpp::rclcpp
@@ -30,13 +31,14 @@ target_link_libraries(read_write_node PUBLIC
 
 # Install
 install(TARGETS
-  read_write_node
+  read_write_node_cpp
   DESTINATION lib/${PROJECT_NAME}
 )
 
 install(PROGRAMS
   src/read_write_node.py
   DESTINATION lib/${PROJECT_NAME}
+  RENAME read_write_node
 )
 
 # Test

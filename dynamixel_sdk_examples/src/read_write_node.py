@@ -68,7 +68,7 @@ class ReadWriteNode(Node):
             return
         self.get_logger().info('Succeeded to set the baudrate.')
 
-        self.setup_dynamixel(DXL_ID)
+        self.setup_dynamixel(DXL_ID,VELOCITY_CONTROL)
         qos = QoSProfile(depth=10)
 
         self.subscription = self.create_subscription(
@@ -91,11 +91,20 @@ class ReadWriteNode(Node):
         dxl_comm_result, dxl_error = self.packet_handler.write1ByteTxRx(
             self.port_handler, dxl_id, ADDR_OPERATING_MODE, operating_mode
         )
+        if operating_mode == POSITION_CONTROL:
+            mode_str = 'Position Control Mode'
+        elif operating_mode == VELOCITY_CONTROL:
+            mode_str = 'Velocity Control Mode'
+        elif operating_mode == PWM_CONTROL:
+            mode_str = 'PWM Control Mode'
+        elif operating_mode == EXTENDED_POSITION_CONTROL:
+            mode_str = 'Extended Position Control Mode'
+    
         if dxl_comm_result != COMM_SUCCESS:
-            self.get_logger().error(f'Failed to set Position Control Mode: \
+            self.get_logger().error(f'Failed to set {mode_str}: \
                                     {self.packet_handler.getTxRxResult(dxl_comm_result)}')
         else:
-            self.get_logger().info('Succeeded to set Position Control Mode.')
+            self.get_logger().info(f'Succeeded to set {mode_str}.')
 
         dxl_comm_result, dxl_error = self.packet_handler.write1ByteTxRx(
             self.port_handler, dxl_id, ADDR_TORQUE_ENABLE, TORQUE_ENABLE
@@ -104,7 +113,7 @@ class ReadWriteNode(Node):
             self.get_logger().error(f'Failed to enable torque: \
                                     {self.packet_handler.getTxRxResult(dxl_comm_result)}')
         else:
-            self.get_logger().info('Succeeded to enable torque.')
+            self.get_logger().info(f'Succeeded to enable torque.')
 
     def set_position_callback(self, msg):
         goal_position = msg.position
