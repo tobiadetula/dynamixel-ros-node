@@ -20,8 +20,8 @@
 from dynamixel_sdk import COMM_SUCCESS
 from dynamixel_sdk import PacketHandler
 from dynamixel_sdk import PortHandler
-from dynamixel_sdk_custom_interfaces.msg import SetPosition
-from dynamixel_sdk_custom_interfaces.srv import GetPosition
+from dynamixel_sdk_custom_interfaces.msg import SetPosition, SetVelocity
+from dynamixel_sdk_custom_interfaces.srv import GetPosition, GetVelocity
 import rclpy
 from rclpy.node import Node
 from rclpy.qos import QoSProfile
@@ -30,7 +30,10 @@ from rclpy.qos import QoSProfile
 ADDR_OPERATING_MODE = 11  # Control table address is different in Dynamixel model
 ADDR_TORQUE_ENABLE = 64
 ADDR_GOAL_POSITION = 116
+ADDR_GOAL_VELOCITY = 104
+
 ADDR_PRESENT_POSITION = 132
+ADDR_PRESENT_VELOCITY = 128
 
 # Protocol version
 PROTOCOL_VERSION = 2.0  # Default Protocol version of DYNAMIXEL X series.
@@ -43,7 +46,9 @@ DEVICE_NAME = '/dev/ttyUSB0'  # Check which port is being used on your controlle
 TORQUE_ENABLE = 1  # Value for enabling the torque
 TORQUE_DISABLE = 0  # Value for disabling the torque
 POSITION_CONTROL = 3  # Value for position control mode
-
+VELOCITY_CONTROL = 1  # Value for velocity control mode
+PWM_CONTROL = 16  # Value for PWM control mode
+EXTENDED_POSITION_CONTROL = 4  # Value for extended position control mode
 
 class ReadWriteNode(Node):
 
@@ -72,12 +77,19 @@ class ReadWriteNode(Node):
             self.set_position_callback,
             qos
         )
+        self.vel_subscription = self.create_subscription(
+            SetVelocity,
+            'set_velocity',
+            self.set_velocity_callback,
+            qos
+        )
 
         self.srv = self.create_service(GetPosition, 'get_position', self.get_position_callback)
+        self.vel_srv = self.create_service(GetVelocity, 'get_velocity', self.get_velocity_callback)
 
-    def setup_dynamixel(self, dxl_id):
+    def setup_dynamixel(self, dxl_id, operating_mode=POSITION_CONTROL):
         dxl_comm_result, dxl_error = self.packet_handler.write1ByteTxRx(
-            self.port_handler, dxl_id, ADDR_OPERATING_MODE, POSITION_CONTROL
+            self.port_handler, dxl_id, ADDR_OPERATING_MODE, operating_mode
         )
         if dxl_comm_result != COMM_SUCCESS:
             self.get_logger().error(f'Failed to set Position Control Mode: \
@@ -109,6 +121,22 @@ class ReadWriteNode(Node):
         else:
             self.get_logger().info(f'Set [ID: {msg.id}] [Goal Position: {msg.position}]')
 
+    def set_velocity_callback(self, msg):
+        goal_velocity = msg.velocity
+
+        dxl_comm_result, dxl_error = self.packet_handler.write4ByteTxRx(
+            self.port_handler, msg.id, ADDR_GOAL_VELOCITY, goal_velocity
+        )
+
+        if dxl_comm_result != COMM_SUCCESS:
+            self.get_logger().error(f'Error: \
+                                    {self.packet_handler.getTxRxResult(dxl_comm_result)}')
+        elif dxl_error != 0:
+            self.get_logger().error(f'Error: {self.packet_handler.getRxPacketError(dxl_error)}')
+        else:
+            self.get_logger().info(f'Set [ID: {msg.id}] [Goal Velocity: {msg.velocity}]')
+            
+            
     def get_position_callback(self, request, response):
         dxl_present_position, dxl_comm_result, dxl_error = self.packet_handler.read4ByteTxRx(
             self.port_handler, request.id, ADDR_PRESENT_POSITION
@@ -125,6 +153,23 @@ class ReadWriteNode(Node):
         response.position = dxl_present_position
         return response
 
+    def get_velocity_callback(self, request, response):
+        dxl_present_velocity, dxl_comm_result, dxl_error = self.packet_handler.read4ByteTxRx(
+            self.port_handler, request.id, ADDR_PRESENT_VELOCITY
+        )
+
+        if dxl_comm_result != COMM_SUCCESS:
+            self.get_logger().error(f'Error: {self.packet_handler.getTxRxResult(dxl_comm_result)}')
+        elif dxl_error != 0:
+            self.get_logger().error(f'Error: {self.packet_handler.getRxPacketError(dxl_error)}')
+        else:
+            self.get_logger().info(f'Get [ID: {request.id}] \
+                                   [Present Velocity: {dxl_present_velocity}]')
+
+        response.velocity = dxl_present_velocity
+        return response
+    
+    
     def __del__(self):
         self.packet_handler.write1ByteTxRx(self.port_handler,
                                            1,

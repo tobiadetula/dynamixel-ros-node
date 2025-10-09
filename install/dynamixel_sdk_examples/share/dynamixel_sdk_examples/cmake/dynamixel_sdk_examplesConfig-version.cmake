@@ -1,1 +1,1 @@
-/home/tobi/Documents/DynamixelROS2/ros/build/dynamixel_sdk_examples/ament_cmake_core/dynamixel_sdk_examplesConfig-version.cmake
+/home/tobi/Documents/dynamixel-ros-node/build/dynamixel_sdk_examples/ament_cmake_core/dynamixel_sdk_examplesConfig-version.cmake

@@ -1,1 +1,1 @@
-/home/tobi/Documents/DynamixelROS2/ros/dynamixel_sdk_custom_interfaces/msg/SetPosition.msg
+/home/tobi/Documents/dynamixel-ros-node/dynamixel_sdk_custom_interfaces/msg/SetPosition.msg

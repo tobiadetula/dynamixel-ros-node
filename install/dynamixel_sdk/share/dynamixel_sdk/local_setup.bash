@@ -1,1 +1,1 @@
-/home/tobi/Documents/DynamixelROS2/ros/build/dynamixel_sdk/ament_cmake_environment_hooks/local_setup.bash
+/home/tobi/Documents/dynamixel-ros-node/build/dynamixel_sdk/ament_cmake_environment_hooks/local_setup.bash

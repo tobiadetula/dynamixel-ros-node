@@ -1,1 +1,1 @@
-/home/tobi/Documents/DynamixelROS2/ros/build/dynamixel_sdk_custom_interfaces/ament_cmake_environment_hooks/pythonpath.sh
+/home/tobi/Documents/dynamixel-ros-node/build/dynamixel_sdk_custom_interfaces/ament_cmake_environment_hooks/pythonpath.sh
