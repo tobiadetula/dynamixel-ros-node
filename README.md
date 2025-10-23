@@ -1,3 +1,9 @@
+For setup:
+```bash
+sudo apt-get install ros-$ROS_DISTRO-dynamixel-sdk
+
+```
+
 To run the node use:
 ```bash
 source install/setup.zsh
