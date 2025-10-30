@@ -39,7 +39,7 @@ ADDR_PRESENT_VELOCITY = 128
 PROTOCOL_VERSION = 2.0  # Default Protocol version of DYNAMIXEL X series.
 
 # Default settings
-DXL_ID = 1  # Dynamixel ID : 1
+DXL_ID = 7 # Dynamixel ID : 1
 BAUDRATE = 57600  # Dynamixel default baudrate : 57600
 DEVICE_NAME = '/dev/ttyUSB0'  # Check which port is being used on your controller
 
